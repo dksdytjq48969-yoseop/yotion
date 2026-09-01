@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="ko"><head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>StudioCurator - 비저너리</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#09232d",
+                        "inverse-primary": "#5e5f60",
+                        "surface": "#0e0e0f",
+                        "on-primary": "#3f4041",
+                        "surface-dim": "#0e0e0f",
+                        "surface-container-lowest": "#000000",
+                        "on-tertiary-fixed": "#03501b",
+                        "error-container": "#7f2927",
+                        "surface-bright": "#2b2c2f",
+                        "primary-fixed": "#e2e2e2",
+                        "surface-container": "#19191b",
+                        "primary-fixed-dim": "#d4d4d4",
+                        "background": "#0e0e0f",
+                        "on-primary-container": "#d0d0d0",
+                        "tertiary-fixed-dim": "#a6eea7",
+                        "tertiary-container": "#b4fdb4",
+                        "outline": "#757578",
+                        "secondary-fixed-dim": "#bfd8e5",
+                        "error-dim": "#bb5551",
+                        "secondary-container": "#273f49",
+                        "on-background": "#e7e5e8",
+                        "surface-variant": "#252628",
+                        "secondary-fixed": "#cde6f4",
+                        "inverse-on-surface": "#565556",
+                        "on-surface": "#e7e5e8",
+                        "inverse-surface": "#fcf8f9",
+                        "tertiary-dim": "#a6eea7",
+                        "on-tertiary-fixed-variant": "#2a6e35",
+                        "primary-dim": "#b8b9b9",
+                        "primary": "#c6c6c7",
+                        "on-secondary-fixed-variant": "#475f6a",
+                        "surface-container-low": "#131315",
+                        "tertiary-fixed": "#b4fdb4",
+                        "on-surface-variant": "#acaaae",
+                        "on-primary-fixed-variant": "#5a5c5c",
+                        "on-secondary-fixed": "#2b424d",
+                        "surface-tint": "#c6c6c7",
+                        "on-tertiary-container": "#1f632c",
+                        "on-tertiary": "#286c33",
+                        "error": "#ee7d77",
+                        "primary-container": "#454747",
+                        "surface-container-highest": "#252628",
+                        "secondary": "#89a1ae",
+                        "on-primary-fixed": "#3e4040",
+                        "on-error": "#490106",
+                        "on-secondary-container": "#aac3d0",
+                        "surface-container-high": "#1f1f22",
+                        "secondary-dim": "#89a1ae",
+                        "on-error-container": "#ff9993",
+                        "outline-variant": "#48484b",
+                        "tertiary": "#ebffe6"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body { background-color: #0e0e0f; color: #e7e5e8; font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+        .glass-panel { background: rgba(25, 25, 27, 0.8); backdrop-filter: blur(16px); }
+        .scrollbar-hide::-webkit-scrollbar { display: none; }
+        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#131315] dark:bg-[#131315] font-inter text-sm font-medium flex flex-col p-6 space-y-8 shadow-[4px_0_24px_rgba(231,229,232,0.02)] z-50">
+    <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-xl">tactic</span>
+        </div>
+        <div>
+            <div class="font-manrope font-bold text-[#e7e5e8] text-sm">The Curator</div>
+            <div class="text-[10px] text-on-surface-variant uppercase tracking-widest">Premium Workspace</div>
+        </div>
+    </div>
+    <button class="w-full bg-primary text-on-primary font-bold py-2.5 rounded-lg flex items-center justify-center gap-2 transition-transform active:scale-[0.98]">
+        <span class="material-symbols-outlined text-sm">add</span>
+        <span>New Entry</span>
+    </button>
+    <nav class="flex-1 space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2 bg-[#19191b] text-[#e7e5e8] rounded-lg transition-colors" href="#">
+            <span class="material-symbols-outlined text-xl">dashboard</span>
+            <span>Dashboard</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 text-[#48484b] hover:text-[#c6c6c7] hover:bg-[#19191b] transition-colors rounded-lg" href="#">
+            <span class="material-symbols-outlined text-xl">tactic</span>
+            <span>Projects</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 text-[#48484b] hover:text-[#c6c6c7] hover:bg-[#19191b] transition-colors rounded-lg" href="#">
+            <span class="material-symbols-outlined text-xl">edit_note</span>
+            <span>Editorial</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 text-[#48484b] hover:text-[#c6c6c7] hover:bg-[#19191b] transition-colors rounded-lg" href="#">
+            <span class="material-symbols-outlined text-xl">query_stats</span>
+            <span>Analytics</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 text-[#48484b] hover:text-[#c6c6c7] hover:bg-[#19191b] transition-colors rounded-lg" href="#">
+            <span class="material-symbols-outlined text-xl">settings</span>
+            <span>Settings</span>
+        </a>
+    </nav>
+    <div class="pt-6 border-t border-outline-variant/10 space-y-1">
+        <a class="flex items-center gap-3 px-3 py-2 text-[#48484b] hover:text-[#c6c6c7] transition-colors" href="#">
+            <span class="material-symbols-outlined text-xl">help_outline</span>
+            <span>Help</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2 text-[#48484b] hover:text-[#c6c6c7] transition-colors" href="#">
+            <span class="material-symbols-outlined text-xl">logout</span>
+            <span>Logout</span>
+        </a>
+    </div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-64 bg-surface min-h-screen">
+    <!-- TopNavBar (Shared Component) -->
+    <header class="w-full top-0 sticky bg-[#0e0e0f] dark:bg-[#0e0e0f] z-40">
+        <div class="flex justify-between items-center px-12 py-6 w-full max-w-7xl mx-auto">
+            <div class="flex items-center gap-8">
+                <div class="text-lg font-bold text-[#e7e5e8] tracking-widest font-manrope">StudioCurator</div>
+                <nav class="flex items-center gap-6 font-manrope tracking-tight font-semibold">
+                    <a class="text-[#48484b] hover:text-[#e7e5e8] transition-colors" href="#">Workspace</a>
+                    <a class="text-[#c6c6c7] border-b-2 border-[#c6c6c7] pb-1" href="#">Library</a>
+                    <a class="text-[#48484b] hover:text-[#e7e5e8] transition-colors" href="#">Insights</a>
+                    <a class="text-[#48484b] hover:text-[#e7e5e8] transition-colors" href="#">Archive</a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="p-2 text-[#c6c6c7] hover:bg-[#19191b] rounded-md transition-all">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <button class="p-2 text-[#c6c6c7] hover:bg-[#19191b] rounded-md transition-all">
+                    <span class="material-symbols-outlined">keyboard_command_key</span>
+                </button>
+                <div class="w-8 h-8 rounded-full overflow-hidden ml-2 ring-2 ring-outline-variant/20">
+                    <img alt="User avatar" class="w-full h-full object-cover" data-alt="professional portrait of a creative director in a minimalist studio setting with soft cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD75nh0WVF9RIwiAMQxN2J2jklAFgzc7YAr4WYX6LQpD-g9oK_QBIP7ulwaTXtzurSl1uOwezEElU6ZeINpHM-TmHzDCvu_RMFBJ_zvdpqv3pqx9syJ-syT3jyx1wMwEd6jRrH2gpRIZzYFf3fdKbEa-BBQ8wvJBUnpHUg0rZIkdoEAnfDBSCO8UBYpLKhNoH3rwQTEK293QnSmQ1NtGbqMwtsxcqyLzFDQMQ91ZyjwzABso09Msmg8qAO3Hkr7uq-rncPbaGz_eEg"/>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- Page Content -->
+    <div class="max-w-7xl mx-auto px-12 py-8 space-y-12">
+        <!-- Header Section -->
+        <section class="space-y-4">
+            <div class="text-6xl mb-6">🚀</div>
+            <h1 class="text-5xl font-extrabold font-headline tracking-tighter text-on-surface">비저너리</h1>
+            <p class="text-on-surface-variant text-lg max-w-2xl leading-relaxed">
+                2024년 장기 비전 및 전략적 실행 계획을 위한 프리미엄 디지털 작업 공간입니다. 모든 프로젝트의 진척 상황을 이곳에서 큐레이팅 하세요.
+            </p>
+        </section>
+        <!-- Quick Tips Callout -->
+        <section class="bg-surface-container-low rounded-xl p-6 flex gap-4 items-start border-l-4 border-primary/30">
+            <div class="bg-primary/10 p-2 rounded-lg text-primary">
+                <span class="material-symbols-outlined text-2xl">lightbulb</span>
+            </div>
+            <div class="space-y-3">
+                <h3 class="font-headline font-bold text-on-surface">Quick Tips</h3>
+                <ul class="space-y-2 text-on-surface-variant text-sm">
+                    <li class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                        <span>매주 월요일 오전 9시에 프로젝트 현황을 업데이트 하세요.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                        <span>'In Progress' 항목이 5개를 초과하지 않도록 관리하세요.</span>
+                    </li>
+                    <li class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary/40"></span>
+                        <span>완료된 항목은 'Archive' 탭으로 이동하여 통계 데이터를 생성합니다.</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+        <!-- Board View Section -->
+        <section class="space-y-8">
+            <div class="flex items-center justify-between">
+                <h2 class="text-2xl font-headline font-bold text-on-surface flex items-center gap-3">
+                    Annual Plan
+                    <span class="text-xs font-label font-normal text-on-surface-variant px-2 py-0.5 bg-surface-container rounded-full">2024 Framework</span>
+                </h2>
+                <div class="flex gap-2">
+                    <button class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+                        <span class="material-symbols-outlined">filter_list</span>
+                    </button>
+                    <button class="p-2 text-on-surface-variant hover:text-on-surface transition-colors">
+                        <span class="material-symbols-outlined">sort</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Board Columns (Lane Effect) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 min-h-[600px]">
+                <!-- Column: To Start -->
+                <div class="bg-surface-container-lowest/30 rounded-xl p-4 flex flex-col gap-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-error-container text-on-error-container text-[11px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">To Start</span>
+                            <span class="text-on-surface-variant text-xs font-medium">10</span>
+                        </div>
+                        <button class="text-on-surface-variant hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-lg">add</span>
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <!-- Card Item -->
+                        <div class="group bg-surface-container hover:bg-surface-container-high p-4 rounded-lg transition-all cursor-pointer">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-outline text-lg">description</span>
+                                <div class="space-y-1">
+                                    <div class="text-sm font-medium text-on-surface group-hover:text-primary transition-colors">브랜드 아이덴티티 가이드라인 수립</div>
+                                    <div class="text-[11px] text-on-surface-variant">Created 2 days ago</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card Item (Repeatable pattern) -->
+                        <div class="group bg-surface-container hover:bg-surface-container-high p-4 rounded-lg transition-all cursor-pointer">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-outline text-lg">description</span>
+                                <div class="space-y-1">
+                                    <div class="text-sm font-medium text-on-surface">시장 분석 보고서 (Q3)</div>
+                                    <div class="text-[11px] text-on-surface-variant">Due Oct 15</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Mocking 10 items with few more visible ones -->
+                        <div class="group bg-surface-container hover:bg-surface-container-high p-4 rounded-lg transition-all cursor-pointer border border-dashed border-outline-variant/30">
+                            <div class="flex items-center gap-3 justify-center text-on-surface-variant py-2">
+                                <span class="text-xs font-medium">+ 8 more items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column: In Progress -->
+                <div class="bg-surface-container-lowest/30 rounded-xl p-4 flex flex-col gap-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-secondary-container text-on-secondary-container text-[11px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">In Progress</span>
+                            <span class="text-on-surface-variant text-xs font-medium">5</span>
+                        </div>
+                        <button class="text-on-surface-variant hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-lg">add</span>
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="group bg-surface-container hover:bg-surface-container-high p-4 rounded-lg transition-all cursor-pointer relative overflow-hidden">
+                            <div class="absolute left-0 top-0 bottom-0 w-1 bg-primary/40"></div>
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-primary text-lg" style="font-variation-settings: 'FILL' 1;">description</span>
+                                <div class="space-y-2 w-full">
+                                    <div class="text-sm font-medium text-on-surface">UX 리서치 인터뷰 결과 분석</div>
+                                    <div class="h-1.5 w-full bg-surface-container-highest rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary w-[65%] rounded-full"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group bg-surface-container hover:bg-surface-container-high p-4 rounded-lg transition-all cursor-pointer">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-outline text-lg">description</span>
+                                <div class="space-y-1">
+                                    <div class="text-sm font-medium text-on-surface">모바일 앱 프로토타이핑 (Phase 1)</div>
+                                    <div class="flex gap-1 mt-2">
+                                        <div class="w-5 h-5 rounded-full bg-surface-bright flex items-center justify-center border border-surface-container overflow-hidden">
+                                            <img alt="Team member" data-alt="professional headshot of a female designer with a confident smile on a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT7E7THKURUAjBqcj1P51tsdrGIaiHfDyrGw-8kYBIbljYbk_q3rnfctO7JHWMxIcJ8Ss7abBEvv6EG9ZaRWkCrLiD_4MLciGGSl32AtYuOhx3YvwRY-ZPl0plNKl21Kyt_DspXqJFG2QSpvekHggNjoecBSunk395f2BluxwmL9SZcv6o4lVf-9gIkb3jpLiIegXqlAB3DjaUvpPCntmAGy1SPeFEDioIulpT2e3-B0HlP8nqm8pRbVEKKlfWZq3vS_IrhPjQAAE"/>
+                                        </div>
+                                        <div class="w-5 h-5 rounded-full bg-surface-bright flex items-center justify-center border border-surface-container overflow-hidden">
+                                            <img alt="Team member" data-alt="professional headshot of a male developer in a black t-shirt with a clean studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHHRLNH9L4esR5Tzru-yAA_rKy_YNXmnNLxaM_OOFr4BW97y9gGn96918Rr3JisT0A1oZfh4vbO2QGmybmqFJUOnAXm5PGowvOLyoGdc3s-vK_SdBeIS5tpoiOpe354dOf_3XFFhYbGE_P79PX1C4ydp3CjhayU_CHKKWqPsOPof4-qfO6NOBaHX4aAcvQTpZf65STRQkypJXHrctb4Pig5OFKoF8cu2L5NbZm16MsutpCw86pWa3q18Bqwu3IaKGLCGZS_Uu_UuA"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group bg-surface-container hover:bg-surface-container-high p-4 rounded-lg transition-all cursor-pointer border border-dashed border-outline-variant/30">
+                            <div class="flex items-center gap-3 justify-center text-on-surface-variant py-2">
+                                <span class="text-xs font-medium">+ 3 more items</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Column: Complete -->
+                <div class="bg-surface-container-lowest/30 rounded-xl p-4 flex flex-col gap-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-on-tertiary-container text-tertiary text-[11px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Complete</span>
+                            <span class="text-on-surface-variant text-xs font-medium">3</span>
+                        </div>
+                        <button class="text-on-surface-variant hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-lg">add</span>
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="group bg-surface-container opacity-60 hover:opacity-100 p-4 rounded-lg transition-all cursor-pointer">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-tertiary-dim text-lg">check_circle</span>
+                                <div class="space-y-1">
+                                    <div class="text-sm font-medium text-on-surface line-through">상반기 예산 기획안 승인</div>
+                                    <div class="text-[11px] text-tertiary-dim">Completed yesterday</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group bg-surface-container opacity-60 hover:opacity-100 p-4 rounded-lg transition-all cursor-pointer">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-tertiary-dim text-lg">check_circle</span>
+                                <div class="space-y-1">
+                                    <div class="text-sm font-medium text-on-surface line-through">팀 워크샵 장소 선정</div>
+                                    <div class="text-[11px] text-tertiary-dim">Completed on Friday</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="group bg-surface-container opacity-60 hover:opacity-100 p-4 rounded-lg transition-all cursor-pointer">
+                            <div class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-tertiary-dim text-lg">check_circle</span>
+                                <div class="space-y-1">
+                                    <div class="text-sm font-medium text-on-surface line-through">신규 클라이언트 온보딩</div>
+                                    <div class="text-[11px] text-tertiary-dim">Completed 1 week ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <!-- Sticky Bottom Bar for Contextual Actions -->
+    <div class="fixed bottom-8 right-8 z-50">
+        <button class="bg-primary text-on-primary w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-transform">
+            <span class="material-symbols-outlined text-3xl">add</span>
+        </button>
+    </div>
+</main>
+</body></html>
