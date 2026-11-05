@@ -59,3 +59,15 @@ logs/
 
 # macOS
 .DS_Store
+
+# 소스 백업 ZIP
+/src/main/java/com/yo/yotion/domain.zip
+
+# 개인 로컬 설정
+/src/main/resources/application-local.properties
+/src/main/resources/application-local.yml
+/src/main/resources/application-local.yaml
+
+# 환경변수 파일 변형
+.env.*
+!.env.example

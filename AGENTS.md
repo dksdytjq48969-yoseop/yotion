@@ -8,6 +8,7 @@
 - 기능 코드는 `domain/{user,page,member,post}` 아래의 `controller`, `service`, `repository`, `entity`, `dto`에 배치한다. 필요한 계층만 추가한다.
 - 기존 단일 Service 클래스 구성을 유지한다. 작업에 필요하지 않은 Service 인터페이스, 공통 추상화, 새 프레임워크를 추가하지 않는다.
 - `src/main/java`가 실제 Java 소스 위치다. `bin`, `build`, 루트 `security/CustomUserDetails.java`, ZIP 파일을 구현 기준으로 삼지 않는다.
+- NAVER, KAKAO 같은 IT 대기업에서 사용하는 코드 구성 방식으로 진행되게 한다.
 
 ## 작업 범위와 호환성
 - 수정 전에 관련 Controller → Service → Repository → Entity/DTO와 호출 경로를 읽는다.
@@ -62,6 +63,11 @@
 - 기존 `*Dto`, `*Service`, `*Repository` 접미사와 한국어 주석·메시지를 따른다. 새 변수에는 `inviterMember`, `inviteeUser`처럼 역할을 드러내는 이름을 쓴다.
 - enum `EXPRIRED`, 컬럼 `postion` 등 기존 저장값의 오타는 영향 확인 없이 바꾸지 않는다.
 - 인접 코드의 들여쓰기를 따르되 불필요한 빈 줄·사용하지 않는 import를 새로 추가하지 않는다.
+
+## 답변 문체
+- 한국어, 명사 중심의 간결한 표현 사용.
+- 핵심 결과 우선, 불필요한 설명 최소화.
+- 코드 수정 전 선택한 방식과 기술의 이유 설명.
 
 ## 검증과 Git
 - 시작 시 `git status --short --branch`와 관련 diff를 확인한다. 사용자의 변경과 미추적 파일을 보존한다.
