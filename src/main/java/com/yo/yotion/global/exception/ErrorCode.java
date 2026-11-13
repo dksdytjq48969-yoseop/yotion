@@ -17,6 +17,7 @@ public enum ErrorCode {
     NOT_PAGE_OWNER(HttpStatus.FORBIDDEN, "페이지 소유자만 수행할 수 있습니다."),
     NOT_PAGE_MEMBER(HttpStatus.FORBIDDEN, "페이지 멤버가 아닙니다."),
     NO_INVITING_AUTHORIZATION(HttpStatus.FORBIDDEN, "초대 권한이 없습니다."),
+    NO_UPDATING_AUTHORIZATION(HttpStatus.FORBIDDEN, "수정할 권한이 없습니다."),
 
     // CONFlICT
     ALREADY_MEMBER(HttpStatus.CONFLICT, "이미 페이지 멤버입니다."),
