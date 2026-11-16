@@ -14,6 +14,8 @@ import com.yo.yotion.domain.post.entity.Post;
 import com.yo.yotion.domain.post.repository.PostRepository;
 import com.yo.yotion.domain.user.entity.User;
 import com.yo.yotion.domain.user.repository.UserRepository;
+import com.yo.yotion.global.exception.BusinessException;
+import com.yo.yotion.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,11 +71,11 @@ public class PageService {
 
         // 1) 페이지 존재 확인
         Page page = pageRepository.findById(pageId)
-                .orElseThrow(() -> new IllegalArgumentException("페이지가 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PAGE_NOT_FOUND));
 
         // 2) Member인지 확인
         memberRepository.findByPage_IdAndUser_Id(pageId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("페이지 멤버가 아닙니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.);
 
         // 3) 응답 생성 (Post목록은 추후 PostService 생성시 채움) ******
         List<PostListResponseDto> posts = Collections.emptyList();
@@ -88,13 +90,13 @@ public class PageService {
     public PageSummaryResponseDto updatePage(Long userId, Long pageId, PageUpdateRequestDto requestDto) {
         // 1) 페이지 존재 확인
         Page page = pageRepository.findById(pageId)
-                .orElseThrow(() -> new IllegalArgumentException("페이지가 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PAGE_NOT_FOUND));
 
         // 2) 권한 확인 유저
         // 멤버인지 / 멤버인데 admin owner가 맞는지
         Member member = memberRepository.findByPageIdAndUserIdAndRoleIn(pageId, userId,
                 List.of(MemberRole.OWNER, MemberRole.ADMIN))
-                .orElseThrow(() -> new IllegalArgumentException("수정할 권한이 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NO_UPDATING_AUTHORIZATION));
 
         // 3) 수정 프로세스
         page.updateTitle(requestDto.getTitle());
@@ -112,12 +114,12 @@ public class PageService {
 
         // 1) 페이지 존재 확인
         Page page = pageRepository.findById(pageId)
-                .orElseThrow(() -> new IllegalArgumentException("페이지가 존재하지 않습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.PAGE_NOT_FOUND));
 
         // 2) 유저가 owner인지 확인
         memberRepository.findByPageIdAndUserIdAndRoleIn(pageId, userId,
                 List.of(MemberRole.OWNER))
-                .orElseThrow(() -> new IllegalArgumentException("삭제 권한이 없습니다."));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NO_UPDATING_AUTHORIZATION));
 
         // 3) Post soft delete
         List<Post> posts = postRepository.findByPage_Id(pageId);
