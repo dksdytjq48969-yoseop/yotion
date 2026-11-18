@@ -9,6 +9,8 @@ import com.yo.yotion.domain.page.dto.PageSummaryResponseDto;
 import com.yo.yotion.domain.page.dto.PageUpdateRequestDto;
 import com.yo.yotion.domain.page.entity.Page;
 import com.yo.yotion.domain.page.repository.PageRepository;
+import com.yo.yotion.domain.post.entity.Post;
+import com.yo.yotion.domain.post.repository.PostRepository;
 import com.yo.yotion.domain.user.entity.AuthProvider;
 import com.yo.yotion.domain.user.entity.User;
 import com.yo.yotion.domain.user.repository.UserRepository;
@@ -41,6 +43,9 @@ public class PageServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Autowired
     private EntityManager entityManager;
@@ -201,8 +206,8 @@ public class PageServiceTest {
 
 
         // 실행 및 검증
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+        BusinessException exception = assertThrows(
+                BusinessException.class,
                 () -> pageService.getPageDetail(
                         nonMemberUser.getId(),
                         createdPage.getPageId()
@@ -307,6 +312,134 @@ public class PageServiceTest {
 
     }
 
+    @Test
+    void 비멤버는_페이지를_수정할수없다 () {
+
+        // 준비 - ownerUser, NonMemberUser, createdPage
+        User ownerUser = saveTestUser("ownerUser");
+        User NonMemberUser = saveTestUser("NonMemberUser");
+        Long pageId = createTestPage(ownerUser);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        PageUpdateRequestDto requestDto = PageUpdateRequestDto.builder()
+                .title("변경 제목")
+                .build();
+
+        BusinessException exception = assertThrows(
+                BusinessException.class,
+                () -> pageService.updatePage(NonMemberUser.getId(), pageId, requestDto)
+        );
+
+        assertEquals(
+                ErrorCode.NO_UPDATING_AUTHORIZATION, exception.getErrorCode()
+        );
+
+        entityManager.flush();
+        entityManager.clear();
+
+        Page unchangedPage = pageRepository.findById(pageId).orElseThrow();
+
+        assertEquals("기존 제목", unchangedPage.getTitle());
+
+
+
+    }
+
+    @Test
+    void 존재하지_않는_페이지는_수정할수없다 () {
+        // 준비 - tryChangeUser, missingPageId
+        User tryChangeUser = saveTestUser("tryChangeUser");
+        Long missingPageId = Long.MAX_VALUE;
+
+
+        entityManager.flush();
+        entityManager.clear();
+
+        PageUpdateRequestDto requestDto = PageUpdateRequestDto.builder()
+                .title("변경 제목")
+                .build();
+
+        BusinessException exception = assertThrows(
+                BusinessException.class,
+                () -> pageService.updatePage(
+                        tryChangeUser.getId(), missingPageId, requestDto
+                )
+        );
+
+        assertEquals(ErrorCode.PAGE_NOT_FOUND, exception.getErrorCode());
+
+    }
+
+    @Test
+    void 페이지_소유자가_페이지를_삭제하면_페이지와_멤버와_게시글이_소프트삭제된다() {
+        // 준비 - ownerUser 생성, createdPage 생성, Member 생성, Post 생성
+        User ownerUser = saveTestUser("ownerUser");
+        Long pageId = createTestPage(ownerUser);
+        User memberUser = saveTestUser("memberUser");
+        Page createdPage = pageRepository.findById(pageId).orElseThrow();
+
+
+        // 내가 하고싶은것 멤버 생성. memberRepository.save -> post 생성-> owner가 페이지 삭제 -> member와 post 삭제.
+
+        memberRepository.save(Member.builder()
+                .page(createdPage)
+                .user(memberUser)
+                .role(MemberRole.VIEWER)
+                .build()
+        );
+
+        postRepository.save(Post.builder()
+                .page(createdPage)
+                .user(ownerUser)
+                .title("테스트 게시글")
+                .build()
+        );
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // 페이지 삭제
+        pageService.deletePage(ownerUser.getId(), pageId);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // SQL에서 조회를 어떻게 해야 soft delete 됐는지 확인? -> deletedAt이 포함되어 있는 게시글은 검색되지 않도록 해야함.
+        // SELECT * FROM
+        assertTrue(pageRepository.findById(pageId).isEmpty());
+        assertTrue(memberRepository.findByPage_Id(pageId).isEmpty());
+        assertTrue(postRepository.findByPage_Id(pageId).isEmpty());
+
+        Number deletedPages = (Number)entityManager.createNativeQuery("""
+            SELECT COUNT(*) FROM page 
+            WHERE page_id = :pageId AND deleted_at IS NOT NULL
+            """)
+            .setParameter("pageId", pageId)
+            .getSingleResult();
+
+        Number deletedMember = (Number)
+            entityManager.createNativeQuery("""
+                SELECT COUNT(*) FROM member
+                WHERE page_id = :pageId AND deleted_at IS NOT NULL
+                """)
+                    .setParameter("pageId", pageId)
+                    .getSingleResult();
+
+            Number deletedPost = (Number)
+                entityManager.createNativeQuery("""
+                    SELECT COUNT(*) FROM post
+                    WHERE page_id = :pageId AND deleted_at IS NOT NULL
+                """)
+                        .setParameter("pageId", pageId)
+                        .getSingleResult();
+
+            assertEquals(1L, deletedPages.longValue());
+            assertEquals(2L, deletedMember.longValue());
+            assertEquals(1L, deletedPost.longValue());
+
+    }
 
 
 

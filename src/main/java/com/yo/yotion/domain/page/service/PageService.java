@@ -75,7 +75,7 @@ public class PageService {
 
         // 2) Member인지 확인
         memberRepository.findByPage_IdAndUser_Id(pageId, userId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.);
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_PAGE_MEMBER));
 
         // 3) 응답 생성 (Post목록은 추후 PostService 생성시 채움) ******
         List<PostListResponseDto> posts = Collections.emptyList();
@@ -119,7 +119,7 @@ public class PageService {
         // 2) 유저가 owner인지 확인
         memberRepository.findByPageIdAndUserIdAndRoleIn(pageId, userId,
                 List.of(MemberRole.OWNER))
-                .orElseThrow(() -> new BusinessException(ErrorCode.NO_UPDATING_AUTHORIZATION));
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_PAGE_OWNER));
 
         // 3) Post soft delete
         List<Post> posts = postRepository.findByPage_Id(pageId);

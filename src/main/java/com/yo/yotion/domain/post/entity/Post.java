@@ -40,6 +40,7 @@ public class Post {
     @Column(columnDefinition = "LONGTEXT")
     private String content;
 
+    @Version
     @Column(name = "content_version", nullable = false)
     private Integer contentVersion;
 
@@ -62,7 +63,6 @@ public class Post {
         this.title = title;
         this.content = content;
         this.imageUrl = imageUrl;
-        this.contentVersion++;
     }
 
     // post 삭제
