@@ -441,6 +441,34 @@ public class PageServiceTest {
 
     }
 
+    @ParameterizedTest
+    @EnumSource(
+            value = MemberRole.class,
+            names = {"ADMIN", "EDITOR", "VIEWER"}
+    )
+    void Owner가_아닌_Member는_페이지를_삭제할_수_없다(MemberRole role) {
+        // 준비 ownerUser, createdPage, memberUser, nonOwnerMember, writedPost
+
+        User ownerUser = saveTestUser("ownerUser");
+        Long pageId = createTestPage(ownerUser);
+        User memberUser = saveTestUser("memberUser");
+        Page createdPage = pageRepository.findById(pageId).orElseThrow();
+
+        // Owner 아닌 멤버 생성
+        memberRepository.save(Member.builder()
+                .user(memberUser)
+                .page(createdPage)
+                .role(role)
+                .build()
+        );
+
+        postRepository.save(Post.builder()
+                .title("제목")
+                .page(createdPage)
+                .user(memberUser)
+                .build());
+    }
+
 
 
 }

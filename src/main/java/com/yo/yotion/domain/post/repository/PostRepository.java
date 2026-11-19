@@ -1,5 +1,6 @@
 package com.yo.yotion.domain.post.repository;
 
+import com.yo.yotion.domain.page.entity.Page;
 import com.yo.yotion.domain.post.entity.Post;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +34,5 @@ public interface PostRepository extends JpaRepository <Post, Long> {
     List<Post> searchPosts(@Param("keyword") String keyword);
 
 
+    Long page(Page page);
 }
