@@ -88,7 +88,9 @@ public class MemberService {
         // 실제 초대 전송 로직. invitation 객체 만든다 -> 전달 대상에게 이메일을 보낸다. -> 이메일을 받은 대상은 초대 링크를 클릭하면 자동으로 멤버로 가입된다.
 
         // 객체 생성
-        Invitation invitation = Invitation.create(page, member_inviter, user_invitee, memberRole);
+        Invitation invitation = Invitation.create(
+                page, member_inviter, user_invitee, memberRole
+        );
         invitationRepository.save(invitation);
 
         eventPublisher.publishEvent(new InvitationCreatedEvent(invitation));

@@ -11,6 +11,7 @@ import com.yo.yotion.domain.page.entity.Page;
 import com.yo.yotion.domain.page.repository.PageRepository;
 import com.yo.yotion.domain.post.entity.Post;
 import com.yo.yotion.domain.post.repository.PostRepository;
+import com.yo.yotion.domain.post.service.PostService;
 import com.yo.yotion.domain.user.entity.AuthProvider;
 import com.yo.yotion.domain.user.entity.User;
 import com.yo.yotion.domain.user.repository.UserRepository;
@@ -455,19 +456,67 @@ public class PageServiceTest {
         Page createdPage = pageRepository.findById(pageId).orElseThrow();
 
         // Owner 아닌 멤버 생성
-        memberRepository.save(Member.builder()
+        Member notOwnerMember = memberRepository.save(Member.builder()
                 .user(memberUser)
                 .page(createdPage)
                 .role(role)
                 .build()
         );
 
-        postRepository.save(Post.builder()
+        Post tryToDeletePost = postRepository.save(Post.builder()
                 .title("제목")
                 .page(createdPage)
                 .user(memberUser)
                 .build());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        BusinessException exception = assertThrows(
+                BusinessException.class,
+                () -> pageService.deletePage(memberUser.getId(), pageId)
+        );
+
+        assertEquals(ErrorCode.NOT_PAGE_OWNER, exception.getErrorCode());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // 추가 확인 필요. page, member, post 그대로 있는지
+        assertTrue(pageRepository.findById(pageId).isPresent());
+        assertEquals(2, memberRepository.findByPage_Id(pageId).size());
+        assertTrue(postRepository.findById(tryToDeletePost.getId()).isPresent());
+
+
     }
+
+
+    @Test
+    void A페이지owner는B페이지를삭제할수없다 () {
+
+        // 준비 aPage, bPage, aPageOwnerUser, bPageOwnerUser
+        User aPageOwnerUser = saveTestUser("aPageOwnerUser");
+        User bPageOwnerUser = saveTestUser("bPageOwnerUser");
+        Long aPageId = createTestPage(aPageOwnerUser);
+        Long bPageId = createTestPage(bPageOwnerUser);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        BusinessException exception = assertThrows(
+         BusinessException.class,
+                () -> pageService.deletePage(aPageOwnerUser.getId(), bPageId)
+        );
+
+        assertEquals(ErrorCode.NOT_PAGE_OWNER, exception.getErrorCode());
+
+        entityManager.flush();
+        entityManager.clear();
+
+        assertTrue(pageRepository.findById(bPageId).isPresent());
+
+    }
+
 
 
 
